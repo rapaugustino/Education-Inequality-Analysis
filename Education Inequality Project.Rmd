@@ -5,29 +5,59 @@ output: html_document
 ---
 
 
-### Introduction
+## Introduction
 
-This project seeks to find whether and how socioeconomic factors—such as household income, unemployment, adult educational attainment, and family structure—affect U.S. high school performances on the ACT or SAT exams. School average scores in these exams will be modeled against different socioeconomic factors. The primary goal of the project is to use the socioeconomic factors to explain school average ACT or SAT scores by performing exploratory and predictive analysis that will give insights on;
-Whether socioeconomic factors can predict U.S. high school performances on the ACT or SAT exams
-How the different socioeconomic factors affect U.S. high school performances on the ACT or SAT exams
-Which socioeconomic factors best explains U.S. high school performances on the ACT or SAT exams
- 
-### Data Used
+This project addresses education inequality in U.S. high schools. The quality of a high school education can be measured in multiple ways, but here we will focus on average student performance on the ACT or SAT exams that students take as part of the college application process.
 
-The EdGap primary data set used for this project is from EdGap.org, “a platform for maps, visualizations, and encouraging discussion on the education gap in the United States.” This data set from 2016 includes information about average ACT or SAT scores for schools and several socioeconomic characteristics of the school district. The secondary data set obtained from National Center for Education Statistics (NCES) constitutes essential information about each school. NCES is “the primary federal entity for collecting and analyzing data related to education.”
+We expect a range of school performance on these exams, but is school performance predicted by socioeconomic factors? 
 
-## EdGap data
-All socioeconomic data (household income, unemployment, adult educational attainment, and family structure) is from the Census Bureau’s American Community Survey.
-EdGap.org reports that ACT and SAT score data is from each state’s education department or some other public data release. The nature of the other public data release is not known. EdGap.org does not indicate that they processed the data in any way. The EdGap.org team assembled the data, so there is always the possibility for human error. Given the public nature of the data, we would be able to consult the original data sources to check the quality of the data if we had any questions.
+$\rightarrow$ Complete the introduction with a description of the problem you are addressing. The introduction should include at least two paragraphs that describe (1) the general problem you are addressing and (2) the specific questions you are asking in this project.
 
-## School information data
-This data set consists of basic identifying information about schools and can be assumed to be reasonably high. As for the EdGap.org data, the school information data is public, so we would be able to consult the original data sources to check the quality of the data if we had any questions.
+
+This project seeks to find whether and how socioeconomic factors—such as household income, unemployment, adult educational attainment, and family structure—affect U.S. high school performances on the ACT or SAT exams. School average scores in these exams will be modeled against different socioeconomic factors. The significance of the effect of a particular factor will be measured to help conclude the findings.
+
+The project will use two data sets: EdGap data set from [EdGap.org] and school information data set from the [National Center for Education Statistics]. These data sets will be analyzed to find out:
+  1. Whether socioeconomic factors can predict U.S. high school performances on the ACT or SAT exams
+  2. How the different socioeconomic factors affect U.S. high school performances on the ACT or SAT     exams
+  3. Which socioeconomic factors best explains U.S. high school performances on the ACT or SAT exams
+
+
+## Data Collection
+
+This project utilizes two data sets. The primary data set is the EdGap data set from [EdGap.org](https://www.edgap.org/#5/37.875/-96.987). This data set from 2016 includes information about average ACT or SAT scores for schools and several socioeconomic characteristics of the school district. The secondary data set is basic information about each school from the [National Center for Education Statistics](https://nces.ed.gov/ccd/pubschuniv.asp).
+
+### EdGap data
+
+All socioeconomic data (household income, unemployment, adult educational attainment, and family structure) is from the Census Bureau's American Community Survey. 
+
+[EdGap.org](https://www.edgap.org/#5/37.875/-96.987) report that ACT and SAT score data is from each state's department of education or some other public data release. The nature of the other public data release is not known.
+
+The quality of the census data and the department of education data can be assumed to be reasonably high. 
+
+[EdGap.org](https://www.edgap.org/#5/37.875/-96.987) do not indicate that they processed the data in any way. The data were assembled by the [EdGap.org](https://www.edgap.org/#5/37.875/-96.987) team, so there is always the possibility for human error. Given the public nature of the data, we would be able to consult the original data sources to check the quality of the data if we had any questions.
+
+
+### School information data
+
+The school information data is from the [National Center for Education Statistics](https://nces.ed.gov/ccd/pubschuniv.asp). This data set consists of basic identifying information about schools can be assumed to be reasonably high. As for the EdGap.org data, the school information data is public, so we would be able to consult the original data sources to check the quality of the data if we had any questions.
+
+
+### Data ethics
+
+Did the students provide consent for their test scores to be made public as a school average?
+
+Are there sources of bias in the data?
+
+Can we cause harm to students by publicizing the data?
+
+We will discuss these issues in class.
 
 
 
 ## Data Preparation
 
 ### Load necessary packages
+
 
 ```{r}
 #tidyverse contains packages we will use for processing and plotting data
@@ -59,6 +89,7 @@ edgap <- read_excel("EdGap_data.xlsx")
 
 
 
+
 ### Explore the contents of the data set
 
 
@@ -67,6 +98,10 @@ $\rightarrow$ Look at the first few rows of the data frame.
 ```{r}
 head(edgap)
 ```
+
+
+
+Use the `View` function to explore the full data set.
 
 
 
@@ -87,17 +122,126 @@ head(school_info)
 ```
 
 
+### Check for a tidy data frame
+
+In a tidy data set, each column is a variable or id and each row is an observation. We again start by looking at the head of the data frame to determine if the data frame is tidy.
+
+#### EdGap data
+
+```{r}
+head(edgap)
+```
+
+The units of observation are the schools. Each school occupies one row of the data frame, which is what we want for the rows.
+
+<br>
+
+$\rightarrow$ What variables are present? What types of variables are present?
+
+
+```{r}
+glimpse(edgap)
+```
+
+The glimpse function shows that there are 7 columns but the first column is not a variable. The first column NCESSCH School ID is an identifier. Therefore, there are 6 variables, all with numeric values.
+
+
+$\rightarrow$ Is the `edgap` data frame tidy?
+Yes, each column is a variable or id and each row is an observation, so the data frame is tidy.
+
+
+#### School information data
+
+We again start by looking at the head of the data frame to determine if the data frame is tidy.
+
+
+```{r}
+head(school_info)
+```
+
+It is more difficult to assess whether this data frame is tidy because of the large number of columns with confusing names.
+
+We have 65 columns, but many of the columns are identifying features of the school and are irrelevant for the analysis. We will select a subset of columns and do the analysis on the subset.
+
+#### Select a subset of columns
+
+We want to select the following variables:
+
+```{r, echo=FALSE, warning=FALSE}
+
+column_names = c("NCESSCH", "MSTATE", "MZIP", "SCH_TYPE_TEXT", "LEVEL")
+
+column_description = c("NCES School ID", "State name", "Zip code", "School type", "LEVEL")
+
+data.frame(name = column_names, description = column_description) %>% 
+  kbl() %>% 
+  kable_styling()
+
+```
+<br>
+
+$\rightarrow$ Use the `select` function to select these columns from the data frame. 
+```{r}
+school_info <- school_info %>% 
+  select(NCESSCH,MSTATE,MZIP,SCH_TYPE_TEXT,LEVEL)
+```
+
+
+$\rightarrow$ Examine the head of the new, smaller data frame
+```{r}
+head(school_info)
+```
+
+
+$\rightarrow$ Is the data frame tidy?
+
+Yes, each column is a variable or id and each row is an observation, so the data frame is tidy.
+
+### Further exploration of basic properties
+
+#### EdGap data
+
+$\rightarrow$ How many observations are in the EdGap data set?
+
+The number of rows in a data frame can be found using the function nrow
+```{r}
+nrow(edgap)
+```
+
+There are 7986 rows, so there are 7986 observations in the data set.
+
+#### School information data
+
+$\rightarrow$ How many observations are in the school information data set?
+
+```{r}
+nrow(school_info)
+```
+There are 102,181 rows, so there are 102,181 observations in the data set. The EdGap data clearly is a subset of all schools.
+
+
 ### Data cleaning
 
 
 #### Rename variables
-We should be thinking ahead to joining the two data frames based on the school ID. To facilitate this join, we should give the school ID column the same name in each data frame.
+
+In any analysis, we might rename the variables in the data frame to make them easier to work with. We have seen that the variable names in the `edgap` data frame allow us to understand them, but they can be improved. In contrast, many of the variables in the `school_info` data frame have confusing names.
+
+Importantly, we should be thinking ahead to joining the two data frames based on the school ID. To facilitate this join, we should give the school ID column the same name in each data frame.
 
 #### EdGap data
 $\rightarrow$ View the column names for the EdGap data
 ```{r}
 names(edgap)
 ```
+
+
+To follow best practices, we should
+
+1. Use all lowercase letters in variable names.
+2. Use underscores `_` between words in a variable name. Do not use blank spaces, as they have done.
+3. Do not use abbreviations, e.g. `Pct`, that can easily be written out.
+4. Be consistent with naming structure across variables. For example, the descriptions `rate`, `percent`, `median`, and `average` should all either be at the beginning or end of the name. 
 
 
 We will use the `rename` function from the `dplyr` package to rename the columns.
@@ -134,7 +278,7 @@ names(school_info)
 ```
 
 
-
+The names can be improved for readability. We also have the constraint that we rename `ncessch` to `id` to be consistent with the `edgap` data.
 
 Rename the columns of the school information data frame.
 
@@ -199,6 +343,36 @@ head(edgap)
 ```
 
 
+#### Identify and deal with missing values
+
+$\rightarrow$ How many missing values are there in each column? Give the number of missing values and the percent of values in each column that are missing.
+```{r}
+edgap %>% 
+  map_df(~sum(is.na(.)))
+```
+```{r}
+edgap %>% 
+  map_df(~sum(is.na(.)))/nrow(edgap)*100 
+```
+
+
+
+$\rightarrow$ Find the rows where the missing value occurs in each column.
+```{r}
+apply(is.na(edgap),2,which)
+```
+
+
+
+
+Now we need to decide how to deal with the `NA`s. We have a few decisions to make:
+
+1. Do we drop rows that have `NA`s?
+2. Do we replace `NA`s with something like the mean of the variable?
+
+There are some schools that are missing all four of the socioeconomic variables, e.g. at rows 142 and 205. However, many of the schools are missing only a subset of the variables. If we drop rows that have `NA`s, then we will negatively affect our analysis using the variables where data were present. So, we will not drop the rows in this data set that are missing the socioeconomic variables. We have so few missing values from each value that we will not worry about replacing `NA`s with some other value. We will selectively omit the `NA`s when working with those columns.
+
+There are, however, 88 schools where we do not have the school information. This raises the possibility that the information is unreliable. Because we are not able to check from the source, we will omit these rows from the data set.
 
 $\rightarrow$ Use the `filter` function to drop only those rows where the state information is missing.
 
@@ -207,8 +381,19 @@ edgap <- edgap %>%
   filter(is.na(state) == FALSE) 
 ```
 
+Recheck for missing values using the skim function:
+```{r}
+skim(edgap)
+```
 
 
+
+Recheck for missing values:
+```{r}
+
+skim(edgap)
+
+```
 
 
 ### Are there data points that look like errors?
@@ -258,6 +443,124 @@ There were 20 schools with negative percent free or reduced lunch, where the val
 We have two main goals when doing exploratory data analysis. The first is that we want to understand the data set more completely. The second goal is to explore relationships between the variables to help guide the modeling process to answer our specific question.
 
 
+### Graphical summaries
+
+Make a pairs plot of the ACT scores and the socioeconomic variables. We will use the `ggpairs` function from the `GGally` package. 
+
+```{r warning=FALSE}
+
+#It may take a few seconds to produce the plot
+
+edgap %>% 
+  select(-c(id,state,zip_code,school_type,school_level)) %>% 
+  ggpairs(lower = list(continuous=wrap("smooth"))) +
+  theme_bw()
+
+```
+
+#### Distributions of individual numerical variables
+
+$\rightarrow$ Describe the shape of the distribution of each variable. 
+We examine the density plots along the main diagonal of the pairs plots.
+
+All distributions appear to be unimodal.
+
+rate_unemployment has a positively skewed distribution. The values near 0.6 may be outliers.
+
+percent_college has a roughly symmetric distribution.
+
+percent_married has a negatively skewed distribution.
+
+average_act has an approximately normal distribution. This is not surprising for a distribution of averages.
+
+median_income has a positively skewed distribution, which is what you expect for income distributions.
+
+percent_lunch has a slightly positively skewed distribution.
+
+
+#### Categorical variables
+
+What states are present in the data set and with what frequency?
+
+$\rightarrow$ First find the states present.
+```{r}
+edgap %>% 
+  select(state) %>% 
+  unique()
+```
+There are 20 states represented in the data set.
+
+$\rightarrow$ Now count the observations by state. Display the results as a bar graph.
+
+```{r}
+edgap %>% 
+  count(state) %>% 
+  ggplot(aes(x = state, y = n)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "State", y = "Count") +
+  theme_bw()
+```
+
+
+
+$\rightarrow$ Reorder the states by count using `fct_reorder`
+```{r}
+edgap %>% 
+  count(state) %>%
+  mutate(state = fct_reorder(state, n)) %>% 
+  ggplot(aes(x = state, y = n)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "State", y = "Count") +
+  theme_bw()
+```
+There is not an equal number of schools from the represented states.
+
+
+$\rightarrow$ What school types are present in the data set and with what frequency? Present the results as a table and as a bar graph.
+
+As a table:
+```{r}
+edgap %>% 
+  count(school_type) %>% 
+  mutate(proportion = round(n/sum(n),3))
+```
+The vast majority (99.8%) are regular schools, but there are a few other types of schools.
+
+Using a bar graph
+```{r}
+edgap %>% 
+  count(school_type) %>%
+  mutate(school_type = fct_reorder(school_type, n)) %>% 
+  ggplot(aes(x = school_type, y = n)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "School type", y = "Count") +
+  theme_bw()
+```
+It's significant to note that the graph can be misleading because of the large number of regular schools and the few schools of the other types.
+
+$\rightarrow$ What school levels are present in the data set and with what frequency? Present the results as a table and as a bar graph.
+
+As a table:
+```{r}
+edgap %>% 
+  count(school_level) %>% 
+  mutate(proportion = round(n/sum(n),3))
+```
+As a graph:
+```{r}
+edgap %>% 
+  count(school_level) %>%
+  mutate(school_level = fct_reorder(school_level, n)) %>% 
+  ggplot(aes(x = school_level, y = n)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "School level", y = "Count") +
+  theme_bw()
+```
+From the grapgh, most of the schools are high schools, but there are some schools listed as Other and Not reported
 
 #### Focus on relationships with `average_act`
 
@@ -343,8 +646,7 @@ There is a negative association between rate_unemployment and average_act
 ```{r}
 min(edgap$rate_unemployment, na.rm = TRUE)
 ```
-
-So we will use a square root transformation, rather than a log transformation.
+so we will use a square root transformation, rather than a log transformation.
 
 
 ```{r}
@@ -1065,7 +1367,6 @@ summary(fit_cr)$coefficients
 
 The slope is -0.1433400 and the intercept is 0.1796804.
 The slope is statistically significant. So there is a statistically significant relationship between rate of unemployment and college degree
-
 Plot the regression line together with the scatter plot
 
 ```{r}
@@ -1089,7 +1390,8 @@ These results show that we can do some moderate prediction of the of unemploymen
 
 ## Conclusion
 
-This project focused on predicting ACT scores or relative SAT scores. While percent_lunch, rate_unemployment, and percent_college were all part of the best model, percent_lunch was relatively significant. After considering the relative importance of each variable, statistically, percent_lunch proved to be the most important predictor. Also, in the predictive analysis, the performance of a single predictor model using percent_lunch is very close to the performance of the best model. Lastly, it is essential to note that this project did not answer any questions regarding the quality of education.
+After completing your analyses, you will make your conclusions and communicate your results. Consult Canvas for further directions.
+
 
 
 
